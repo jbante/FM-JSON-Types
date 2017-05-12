@@ -21,72 +21,72 @@ This module supports two approaches for translating between FileMaker data types
 
 ## How to use the custom functions
 
-Set a number:
+###### Set a number:
 
-	 JSONSetElement ( "{}" ; "numberKey" ; 1.23e+4 ; JSONNumber )
+	JSONSetElement ( "{}" ; "numberKey" ; 1.23e+4 ; JSONNumber )
 	= {"numberKey":1.23e+4}
 
-Get a number:
+###### Get a number:
 
 	JSONGetNumber ( $json ; "numberKey" )
 	= 1.23e+4
 
 Since JSON supports number-type data, no function is necessary when serializing to JSON.
 
-Set a boolean:
+###### Set a boolean:
 
 	JSONSetElement ( "{}" ; "booleanKey" ; False ; JSONBoolean )
 	= {"booleanKey":false}
 	
-Get a boolean:
+###### Get a boolean:
 
 	JSONGetBoolean ( $json ; "booleanKey" )
 	= 0
 
 Since JSON supports boolean-type data, no function is necessary when serializing to JSON.
 
-Set a date:
+###### Set a date:
 
 	JSONSetElement ( "{}" ; "dateKey" ; ISOFromDate ( Date ( 5 ; 9 ; 2017 ) ) ; JSONString )
 	= {"dateKey":"2017-05-09"}
 
-Get a date:
+###### Get a date:
 
 	JSONGetDateFromISO ( $json ; "dateKey" )
 	= 9 May 2017
 
 Dates are formatted according to ISO 8601 and serialized as JSONStrings.
 
-Set a time:
+###### Set a time:
 
 	JSONSetElement ( "{}" ; "timeKey" ; ISOFromTime ( Time ( 18 ; 34 ; 56.7 ) ) ; JSONString )
 	= {"timeKey":"18:34:56,7"}
 
-Get a time:
+###### Get a time:
 
 	JSONGetTimeFromISO ( $json ; "timeKey" )
 	= 6:34:56.7 pm
 
 Times are formatted according to ISO 8601 and serialized as JSONStrings. ISO 8601 supports time zones, but FileMaker times do not. These functions will ignore time zone information from other sources.
 
-Set a timestamp:
+###### Set a timestamp:
 
 	JSONSetElement ( "{}" ; "timestampKey" ; ISOFromTimestamp ( $timestamp ) ; JSONString )
 	= {"timestampKey":"2017-05-09T12:34:56,7"}
 
-Get a timestamp:
+###### Get a timestamp:
 
 	JSONGetTimestampFromISO ( $json ; "timestampKey" )
 	= 9 May 2017, 6:34:56.7 pm
 
 Timestamps are formatted according to ISO 8601 and serialized as JSONStrings. ISO 8601 supports time zones, but FileMaker timestamps do not. These functions will ignore time zone information from other sources.
 
-Set a container:
+###### Set a container:
 
 	JSONSetElement ( "{}" ; "containerKey" ; JSONContainerObject ( $container ) ; JSONObject )
 	= {"containerKey":{"base64":"iVBOR...","fileName":"image.png"}}
 
-Get a container:
+###### Get a container:
 
 	JSONGetContainer ( $json ; "containerKey" )
 
@@ -94,67 +94,68 @@ Containers are serialized as JSONObjects with sub-values for the file name and t
 
 ## How to use the scripts
 
-Set a number:
+###### Set a number:
 
 	Perform Script [ "Your Script" ; Parameter: JSONSetElement ( "{}" ; "numberKey" ; 1.23e+4 ; JSONNumber ) ]
 
-Get a number:
+###### Get a number:
 
 	Set Variable [ $number ; Value: GetAsNumber ( JSONGetElement ( Get ( ScriptResult ) ; "numberKey" ) ) ]
 
 Since FileMaker has a built-in `GetAsNumber` function, there is no value in using a separate script to interpret number data from JSON.
 
-Set a boolean:
+###### Set a boolean:
 
 	Perform Script [ "Your Script" ; Parameter: JSONSetElement ( "{}" ; "booleanKey" ; False ; JSONBoolean ) ]
 
-Get a boolean:
+###### Get a boolean:
 
 	Set Variable [ $boolean ; Value: GetAsBoolean ( JSONGetElement ( Get ( ScriptResult ) ; "booleanKey" ) ) ]
 
 Since FileMaker has a built-in `GetAsBoolean` function, there is no value in using a separate script to interpret boolean data from JSON.
 
-Set a date:
+###### Set a date:
 
 	Perform Script [ "Convert to ISO 8601 from Date" ; Parameter: Date ( 5 ; 9 ; 2017 ) ]
 	Set Variable [ $json ; Value: JSONSetElement ( "{}" ; "dateKey" ; Get ( ScriptResult ) ; JSONString ) ]
 
-Get a date:
+###### Get a date:
 
 	Perform Script [ "Convert to Date from ISO 8601" ; Parameter: JSONGetElement ( $json ; "dateKey" ) ]
 	Set Variable [ $date ; Value: Get ( ScriptResult ) ]
 
 Dates are formatted according to ISO 8601 and serialized as JSONStrings.
 
-Set a time:
+###### Set a time:
 
 	Perform Script [ "Convert to ISO 8601 from Time" ; Parameter: Time ( 18 ; 34 ; 56.7 ) ]
 	Set Variable [ $json ; Value: JSONSetElement ( "{}" ; "timeKey" ; Get ( ScriptResult ) ; JSONString ) ]
 
-Get a time:
+###### Get a time:
 
 	Perform Script [ "Convert to Date from ISO 8601" ; Parameter: JSONGetElement ( $json ; "timeKey" ) ]
 	Set Variable [ $time ; Value: Get ( ScriptResult ) ]
 
 Times are formatted according to ISO 8601 and serialized as JSONStrings. ISO 8601 supports time zones, but FileMaker times do not. These scripts will ignore time zone information from other sources.
 
-Set a timestamp:
+###### Set a timestamp:
  
 	Perform Script [ "Convert to ISO 8601 from Time" ; Parameter: $timestamp ]
 	Set Variable [ $json ; Value: JSONSetElement ( "{}" ; "timestampKey" ; Get ( ScriptResult ) ; JSONString )
 
-Get a timestamp:
+###### Get a timestamp:
+
 	Perform Script [ "Convert to Date from ISO 8601" ; Parameter: JSONGetElement ( $json ; "timestampKey" ) ]
 	Set Variable [ $timestamp ; Value: Get ( ScriptResult ) ]
 
 Timestamps are formatted according to ISO 8601 and serialized as JSONStrings. ISO 8601 supports time zones, but FileMaker timestamps do not. These scripts will ignore time zone information from other sources.
 
-Set a container:
+###### Set a container:
 
 	Perform Script [ "Convert to JSONObject from Container" ; Parameter: $container ]
 	Set Variable [ $json ; Value: JSONSetElement ( "{}" ; "containerKey" ; Get ( ScriptResult ) ; JSONObject ) ]
 
-Get a container:
+###### Get a container:
 
 	Perform Script [ "Convert to Container from JSONObject" ; Parameter: JSONGetElement ( $json ; "containerKey" ) ]
 	Set Variable [ $container ; Value: Get ( ScriptResult ) ]

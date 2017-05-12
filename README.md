@@ -133,19 +133,19 @@ Dates are formatted according to ISO 8601 and serialized as JSONStrings.
 
 ###### Get a time:
 
-	Perform Script [ "Convert to Date from ISO 8601" ; Parameter: JSONGetElement ( $json ; "timeKey" ) ]
+	Perform Script [ "Convert to Time from ISO 8601" ; Parameter: JSONGetElement ( $json ; "timeKey" ) ]
 	Set Variable [ $time ; Value: Get ( ScriptResult ) ]
 
 Times are formatted according to ISO 8601 and serialized as JSONStrings. ISO 8601 supports time zones, but FileMaker times do not. These scripts will ignore time zone information from other sources.
 
 ###### Set a timestamp:
  
-	Perform Script [ "Convert to ISO 8601 from Time" ; Parameter: $timestamp ]
+	Perform Script [ "Convert to ISO 8601 from Timestamp" ; Parameter: $timestamp ]
 	Set Variable [ $json ; Value: JSONSetElement ( "{}" ; "timestampKey" ; Get ( ScriptResult ) ; JSONString )
 
 ###### Get a timestamp:
 
-	Perform Script [ "Convert to Date from ISO 8601" ; Parameter: JSONGetElement ( $json ; "timestampKey" ) ]
+	Perform Script [ "Convert to Timestamp from ISO 8601" ; Parameter: JSONGetElement ( $json ; "timestampKey" ) ]
 	Set Variable [ $timestamp ; Value: Get ( ScriptResult ) ]
 
 Timestamps are formatted according to ISO 8601 and serialized as JSONStrings. ISO 8601 supports time zones, but FileMaker timestamps do not. These scripts will ignore time zone information from other sources.

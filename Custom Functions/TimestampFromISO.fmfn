@@ -1,0 +1,36 @@
+/*******************************************************************************
+ * TimestampFromISO ( iso8601Timestamp )
+ * Parses timestamp data formatted according to ISO 8601, and casts it to a
+ * FileMaker timestamp. For timestamps with limited precision, the first time in
+ * the specified period will be returned.
+ *
+ * @parameter iso8601Timestamp: text encoding a time in ISO 8601 format
+ *
+ * @return A timestamp
+ *
+ * @uses DateFromISO ( iso8601Date )
+ * @uses TimeFromISO ( iso8601Time )
+ *
+ * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2017-05-11 - Jeremy Bante <http://scr.im/fugue> - Improving error
+ * result
+ *
+ * @see https://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
+
+ Let ( [
+	_date = DateFromISO ( iso8601Timestamp ) ;
+	_thereIsNoTime = Position ( iso8601Timestamp ; "T" ; 1 ; 1 ) = 0 ;
+	_time =
+		If ( _thereIsNoTime ;
+			0 ;
+			/* Else */ TimeFromISO ( iso8601Timestamp )
+		) ;
+	_error = Left ( _date ; 1 ) = "?" or Left ( _time ; 1 ) = "?"
+] ;
+	If ( _error ;
+		"? Not a valid ISO 8601 timestamp¶  " & iso8601Timestamp ;
+	/* Else */
+		Timestamp ( _date ; _time )
+	)
+)

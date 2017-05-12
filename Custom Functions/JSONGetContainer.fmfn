@@ -1,0 +1,27 @@
+/*******************************************************************************
+ * JSONGetContainer ( json ; keyOrIndexOrPath )
+ * Parses a value from JSON data, and casts it as FileMaker container data.
+ * This function assumes that the keyOrIndexOrPath refers to a JSONObject
+ * encoded according to the format of the JSONContainerObject function.
+ *
+ * @parameter json: the json to parse
+ * @parameter keyOrIndexOrPath: which value to parse out
+ *
+ * @return container data
+ *
+ * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+Let ( [
+	_value = JSONGetElement ( json ; keyOrIndexOrPath ) ;
+	_thereWasAParsingError = Left ( _value ; 1 ) = "?"
+] ;
+	If ( _thereWasAParsingError ;
+		_value ;
+	/* Else */
+		Base64Decode (
+			JSONGetElement ( _value ; "base64" ) ;
+			JSONGetElement ( _value ; "fileName" )
+		)
+	)
+)

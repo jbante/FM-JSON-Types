@@ -1,0 +1,23 @@
+/*******************************************************************************
+ * JSONGetTimeFromISO ( json ; keyOrIndexOrPath )
+ * Parses a value from JSON data, and casts it to a FileMaker time.
+ * This function assumes that the time is encoded as a JSONString formatted
+ * according to ISO 8601. Times with limited accuracy will return the first time
+ * in the specified period.
+ *
+ * @parameter json: the json to parse
+ * @parameter keyOrIndexOrPath: which value to parse out
+ *
+ * @return A time
+ *
+ * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ *
+ * @see https://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
+
+Let ( [
+	_value = JSONGetElement ( json ; keyOrIndexOrPath ) ;
+	_thereWasAParsingError = Left ( _value ; 1 ) = "?"
+] ;
+	If ( _thereWasAParsingError ; _value ; /* Else */ TimeFromISO ( _value ) )
+)

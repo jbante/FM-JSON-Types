@@ -1,0 +1,23 @@
+/*******************************************************************************
+ * JSONGetBoolean ( json ; keyOrIndexOrPath )
+ * Parses a value from JSON data, and casts it to a boolean.
+ *
+ * @parameter json: the json to parse
+ * @parameter keyOrIndexOrPath: which value to parse out
+ *
+ * @return A boolean, or text indicating an error
+ *
+ * @history 2017-05-11 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+Let ( [
+	_value = JSONGetElement ( json ; keyOrIndexOrPath ) ;
+	_thereWasAParsingError = ( Left ( _value ; 1 ) = "?" ) ;
+	_valueIsNotABoolean = not ( _value = False or _value = True )
+] ;
+	Case (
+		_thereWasAParsingError ;	_value ;
+		_valueIsNotABoolean ;	"? Value is not a boolean¶  " & _value ;
+		/* Else */	_value
+	)
+)

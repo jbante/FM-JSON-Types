@@ -1,0 +1,24 @@
+/*******************************************************************************
+ * JSONGetDateFromISO ( json ; keyOrIndexOrPath )
+ * Parses a value from JSON data, and casts it to a FileMaker date.
+ * This function assumes that the date is encoded as a JSONString formatted
+ * according to ISO 8601. Dates with limited accuracy will return the first date
+ * in the specified period.
+ *
+ * @parameter json: the json to parse
+ * @parameter keyOrIndexOrPath: which value to parse out
+ *
+ * @return A date
+ *
+ * @history 2017-04-06 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2017-04-08 - Jeremy Bante <http://scr.im/fugue> - Refactoring
+ *
+ * @see https://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
+
+Let ( [
+	_value = JSONGetElement ( json ; keyOrIndexOrPath ) ;
+	_thereWasAParsingError = Left ( _value ; 1 ) = "?"
+] ;
+	If ( _thereWasAParsingError ; _value ; /* Else */ DateFromISO ( _value ) )
+)

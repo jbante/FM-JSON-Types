@@ -1,0 +1,37 @@
+/*******************************************************************************
+ * ISOFromDate ( theDate )
+ *
+ * @parameter theDate: The FileMaker date to coerce to ISO 8601 format
+ *
+ * @return theDate rendered in ISO 8601 format: YYYY-MM-DD
+ *
+ * @history 2011-09-22 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2017-05-11 - Jeremy Bante <http://scr.im/fugue> - Adding error
+ * result for non-date input
+ *
+ * @see http://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
+
+Let ( [
+	_date =
+		If ( Year ( theDate ) = "?" ;
+			GetAsTimestamp ( theDate ) ;
+			/* Else */ theDate
+		) ;
+	_year = Year ( _date )
+] ;
+	Case (
+		IsEmpty ( theDate ) ;
+			"" ;
+
+		_year = "?" ;
+			"? Value is not a date¶  " & theDate ;
+
+		/* Else */
+			Right ( "0000" & Year ( _date ) ; 4 )
+			& "-"
+			& Right ( "00" & Month ( _date ) ; 2 )
+			& "-"
+			& Right ( "00" & Day ( _date ) ; 2 )
+	)
+)

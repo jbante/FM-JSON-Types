@@ -1,0 +1,32 @@
+/*******************************************************************************
+ * JSONGetNumber ( json ; keyOrIndexOrPath )
+ * Parses a value from JSON data, and casts it to a number.
+ *
+ * @parameter json: the json to parse
+ * @parameter keyOrIndexOrPath: which value to parse out
+ *
+ * @return A number
+ *
+ * @history 2017-04-06 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2017-04-08 - Jeremy Bante <http://scr.im/fugue> - Refactoring
+ * @history 2017-04-25 - Daniel Smith <dan@filemaker.consulting> - Add value
+ * to result if it's not a number.
+ * @history 2017-04-27 - Jeremy Bante <http://scr.im/fugue> - Omitting input
+ * from error result.
+ * @history 2017-04-30 - Jeremy Bante <http://scr.im/fugue> - Revising wording
+ * of NaN error result and re-including parsed value, based on discussion with
+ * Dan Smith.
+ ******************************************************************************/
+
+Let ( [
+	_value = JSONGetElement ( json ; keyOrIndexOrPath ) ;
+	_thereWasAParsingError = ( Left ( _value ; 1 ) = "?" ) ;
+	_number = GetAsNumber ( _value ) ;
+	_valueIsNotANumber = IsEmpty ( _number ) and not IsEmpty ( _value )
+] ;
+	Case (
+		_thereWasAParsingError ;	_value ;
+		_valueIsNotANumber ;	"? Value is not a number¶  " & _value ;
+		/* Else */	_number
+	)
+)

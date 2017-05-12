@@ -1,0 +1,17 @@
+/*******************************************************************************
+ * JSONContainerObject ( containerData )
+ * Encodes container data as a JSONObject.
+ *
+ * @parameter containerData
+ *
+ * @return a JSONObject encoding the container data
+ *
+ * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2017-04-27 - Jeremy Bante <http://scr.im/fugue> - Using
+ * Base64EncodeRFC to improve speed, implementing a recommendation by Dan Smith.
+ ******************************************************************************/
+
+JSONSetElement ( "{}" ;
+	[ "fileName" ; GetContainerAttribute ( containerData ; "filename" ) ; JSONString ] ;
+	[ "base64" ; Base64EncodeRFC ( 4648 ; containerData ) ; JSONString ]
+)

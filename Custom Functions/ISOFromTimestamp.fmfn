@@ -1,0 +1,36 @@
+/*******************************************************************************
+ * ISOFromTimestamp ( theTimestamp )
+ *
+ * @parameter theTimestamp: The FileMaker timestamp to coerce to ISO 8601 format
+ *
+ * @return theTimestamp rendered in ISO 8601 format: YYYY-MM-DDThh:mm:ss,sss
+ * (24-hour time)
+ *
+ * @uses ISOFromDate ( theDate )
+ * @uses ISOFromTime ( theTime )
+ *
+ * @history 2011-05-17 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Refactoring to use
+ * other functions for date & time components.
+ * @history 2017-05-11 - Jeremy Bante <http://scr.im/fugue> - Improving error
+ * results.
+ *
+ * @see http://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
+
+Let ( [
+	_date = ISOFromDate ( theTimestamp ) ;
+	_time = ISOFromTime ( theTimestamp ) ;
+	_notValid = Left ( _date ; 1 ) = "?" or Left ( _time ; 1 ) = "?"
+] ;
+	Case (
+		IsEmpty ( theTimestamp ) ;
+			"" ;
+
+		_notValid ;
+			"? Value is not a timestamp¶  " & theTimestamp ;
+
+		/* Else */
+			_date & "T" & _time
+	)
+)

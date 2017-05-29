@@ -9,9 +9,16 @@
  * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
  * @history 2017-04-27 - Jeremy Bante <http://scr.im/fugue> - Using
  * Base64EncodeRFC to improve speed, implementing a recommendation by Dan Smith.
+ * @history 2017-05-28 - Jeremy Bante <http://scr.im/fugue> - Handling empty
+ * inputs based on a suggestion by Dale Long.
+ * @see http://www.modularfilemaker.org/module/fm-json-types/#comment-30235
  ******************************************************************************/
 
-JSONSetElement ( "{}" ;
-	[ "fileName" ; GetContainerAttribute ( containerData ; "filename" ) ; JSONString ] ;
-	[ "base64" ; Base64EncodeRFC ( 4648 ; containerData ) ; JSONString ]
+If ( IsEmpty ( containerData ) ;
+	"{}" ;
+/* Else */
+	JSONSetElement ( "{}" ;
+		[ "fileName" ; GetContainerAttribute ( containerData ; "filename" ) ; 	JSONString ] ;
+		[ "base64" ; Base64EncodeRFC ( 4648 ; containerData ) ; JSONString ]
+	)
 )

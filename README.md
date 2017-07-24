@@ -4,7 +4,7 @@ FileMaker 16 introduced [a collection of built-in functions][1] for manipulating
 
 [1]: https://fmhelp.filemaker.com/help/16/fmp/en/#page/FMP_Help/json-functions.html "FileMaker documentation on JSON functions"
 
-JSON does not have a broad palette of scalar data types to choose from: text, number, boolean, and null. On top of that, FileMaker's JSONGetElement function always returns a text result, even when the serialized JSON value is a number or boolean. Sending and receiving data with correct types requires more logic on top of the new JSON functions.
+JSON does not have a broad palette of scalar data types to choose from: text, number, boolean, and null. On top of that, incoming JSON data may inappropriately format boolean or numeric data as text. Sending and receiving data with correct types requires more logic on top of the new JSON functions.
 
 This module uses [ISO 8601 format][2] for dates, times, and timestamps. This is the most popular method for representing such data used by web services, so this module is also useful for integrating web services with FileMaker applications.
 
@@ -31,7 +31,7 @@ This module supports two approaches for translating between FileMaker data types
 	JSONGetNumber ( $json ; "numberKey" )
 	= 1.23e+4
 
-Since JSON supports number-type data, no function is necessary when serializing to JSON.
+Since JSON supports number-type data, no function is necessary when serializing to JSON. The JSONGetElement function in FileMaker 16.0.2 and later will automatically return number-type data if the element is a JSON number. However, the JSONGetNumber custom function may still be useful for handling data from sources that inappropriately format numeric data as JSON strings.
 
 ###### Set a boolean:
 
@@ -43,7 +43,7 @@ Since JSON supports number-type data, no function is necessary when serializing 
 	JSONGetBoolean ( $json ; "booleanKey" )
 	= 0
 
-Since JSON supports boolean-type data, no function is necessary when serializing to JSON.
+Since JSON supports boolean-type data, no function is necessary when serializing to JSON. The JSONGetElement function in FileMaker 16.0.2 and later will automatically return boolean-type data if the element is a JSON boolean. (Note that FileMaker represents boolean values as numbers, 0 for _false_ and 1 for _true_.) However, the JSONGetBoolean custom function may still be useful for handling data from sources that inappropriately format boolean data as JSON strings.
 
 ###### Set a date:
 
@@ -102,7 +102,7 @@ Containers are serialized as JSONObjects with sub-values for the file name and t
 
 	Set Variable [ $number ; Value: GetAsNumber ( JSONGetElement ( Get ( ScriptResult ) ; "numberKey" ) ) ]
 
-Since FileMaker has a built-in `GetAsNumber` function, there is no value in using a separate script to interpret number data from JSON.
+Since FileMaker has a built-in `GetAsNumber` function, there is no value in using a separate script to interpret number data from JSON. The JSONGetElement function in FileMaker 16.0.2 and later will automatically return number-type data if the element is a JSON number. However, explicitly casting the value as a number may still be useful for handling data from sources that inappropriately format numeric data as JSON strings.
 
 ###### Set a boolean:
 
@@ -112,7 +112,7 @@ Since FileMaker has a built-in `GetAsNumber` function, there is no value in usin
 
 	Set Variable [ $boolean ; Value: GetAsBoolean ( JSONGetElement ( Get ( ScriptResult ) ; "booleanKey" ) ) ]
 
-Since FileMaker has a built-in `GetAsBoolean` function, there is no value in using a separate script to interpret boolean data from JSON.
+Since FileMaker has a built-in `GetAsBoolean` function, there is no value in using a separate script to interpret boolean data from JSON. The JSONGetElement function in FileMaker 16.0.2 and later will automatically return boolean-type data if the element is a JSON boolean. (Note that FileMaker represents boolean values as numbers, 0 for _false_ and 1 for _true_.) However, explicitly casting the value as a boolean may still be useful for handling data from sources that inappropriately format boolean data as JSON strings.
 
 ###### Set a date:
 

@@ -13,20 +13,27 @@
  *
  * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
  * @history 2017-05-11 - Jeremy Bante <http://scr.im/fugue> - Improving error
- * result
+ * result.
+ * @history 2017-10-02 - Jeremy Bante <http://scr.im/fugue> - Tolerating spaces
+ * as timestamp delimiters.
  *
  * @see https://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/
 
  Let ( [
 	_date = DateFromISO ( iso8601Timestamp ) ;
-	_thereIsNoTime = Position ( iso8601Timestamp ; "T" ; 1 ; 1 ) = 0 ;
+	_delimiterIsPresent =
+		Position ( iso8601Timestamp ; "T" ; 1 ; 1 ) > 0
+		or Position ( iso8601Timestamp ; " " ; 1 ; 1 ) > 0 ;
 	_time =
-		If ( _thereIsNoTime ;
-			0 ;
-			/* Else */ TimeFromISO ( iso8601Timestamp )
+		If ( _delimiterIsPresent ;
+			TimeFromISO ( iso8601Timestamp ) ;
+			/* Else */ 0
 		) ;
-	_error = Left ( _date ; 1 ) = "?" or Left ( _time ; 1 ) = "?"
+	_error =
+		Left ( _date ; 1 ) = "?"
+		or Left ( _time ; 1 ) = "?"
+		or _delimiterIsPresent and ( IsEmpty ( _date ) or IsEmpty ( _time ) )
 ] ;
 	If ( _error ;
 		"? Not a valid ISO 8601 timestamp¶  " & iso8601Timestamp ;

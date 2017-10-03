@@ -17,12 +17,18 @@
  * @history 2017-04-27 - Jeremy Bante <http://scr.im/fugue> - Removing exception
  * for JSONGetElement result error. Adjusting response to empty date input to
  * behave similarly for timestamp input.
+ * @history 2017-10-02 - Jeremy Bante <http://scr.im/fugue> - Tolerating spaces
+ * as timestamp delimiters.
  *
  * @see https://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/
 
 Let ( [
-	_delimiterPosition = Position ( iso8601Date ; "T" ; 1 ; 1 ) ;
+	_delimiterPosition =
+		Max (
+			Position ( iso8601Date ; "T" ; 1 ; 1 ) ;
+			Position ( iso8601Date ; " " ; 1 ; 1 )
+		) ;
 	_text =
 		If ( _delimiterPosition = 0 ;
 			iso8601Date ;

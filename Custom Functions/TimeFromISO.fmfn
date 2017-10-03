@@ -16,12 +16,19 @@
  * behave similarly for timestamp input.
  * @history 2017-05-11 - Jeremy Bante <http://scr.im/fugue> - Improving error
  * result
+ * @history 2017-10-02 - Jeremy Bante <http://scr.im/fugue> - Tolerating space
+ * as timestamp delimiter.
  *
  * @see https://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/
 
 Let ( [
-	_delimiterPosition = Position ( iso8601Time ; "T" ; 1 ; 1 ) ;
+	_inputIsEmpty = IsEmpty ( iso8601Time ) ;
+	_delimiterPosition =
+		Max (
+			Position ( iso8601Time ; "T" ; 1 ; 1 ) ;
+			Position ( iso8601Time ; " " ; 1 ; 1 )
+		) ;
 	_text =
 		If ( _delimiterPosition = 0 ;
 			iso8601Time ;
@@ -35,8 +42,11 @@ Let ( [
 			Position ( _text ; "−" ; 1 ; 1 )
 		) ;
 	_invalid =
-		_timezonePosition > 0
-		and PatternCount ( _text ; Middle ( _text ; _timezonePosition ; 1 ) ) > 1 ;
+		( IsEmpty ( _text ) and not _inputIsEmpty )
+		or (
+			_timezonePosition > 0
+			and PatternCount ( _text ; Middle ( _text ; _timezonePosition ; 1 ) ) > 1
+		) ;
 	_text =
 		If ( _timezonePosition = 0 ;
 			_text ;
@@ -44,10 +54,7 @@ Let ( [
 		) ;
 	_colonFormat = Position ( _text ; ":" ; 1 ; 1 ) > 0 ;
 	_decimal =
-		Max (
-			Position ( _text ; "," ; 1 ; 1 ) ;
-			Position ( _text ; "." ; 1 ; 1 )
-		) ;
+		Max ( Position ( _text ; "," ; 1 ; 1 ) ; Position ( _text ; "." ; 1 ; 1 ) ) ;
 	_integer =
 		If ( _decimal = 0 ;
 			_text ;
@@ -59,7 +66,7 @@ Let ( [
 	_second = Middle ( _integer ; If ( _colonFormat ; 7 ; 5 ) ; 2 )
 ] ;
 	Case (
-		IsEmpty ( _text ) ;
+		_inputIsEmpty ;
 			"" ;
 
 		_invalid ;
@@ -83,4 +90,5 @@ Let ( [
 		/* Else */
 			Time ( _hour ; _minute ; _second )
 	)
+
 )
